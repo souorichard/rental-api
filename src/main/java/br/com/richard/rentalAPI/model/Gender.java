@@ -1,8 +1,11 @@
 package br.com.richard.rentalAPI.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -16,8 +19,8 @@ public class Gender {
     @Column
     private String namegender;
 
-    @ManyToOne
-    @JoinColumn(name = "idmovie")
-    private Movie idmovie;
+    @JsonIgnore
+    @OneToMany(mappedBy = "gender")
+    private List<Movie> moviegender = new ArrayList<>();
 
 }

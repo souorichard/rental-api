@@ -19,12 +19,12 @@ public class Movie {
     @Column
     private String namemovie;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "idmovie")
-    private List<Actor> actors = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "idactor")
+    private Actor actor;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "idmovie")
-    private List<Gender> genders = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "idgender")
+    private Gender gender;
 
 }
