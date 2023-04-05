@@ -17,7 +17,7 @@ public class Gender {
     private Integer id;
 
     @Column
-    private String namegender;
+    private String description;
 
     @JsonIgnore
     @OneToMany(mappedBy = "gender")
