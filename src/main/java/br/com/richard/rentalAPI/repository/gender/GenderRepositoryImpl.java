@@ -4,6 +4,7 @@ import br.com.richard.rentalAPI.model.Gender;
 import br.com.richard.rentalAPI.repository.filter.GenderFilter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityManager;
@@ -33,8 +34,32 @@ public class GenderRepositoryImpl implements GenderRepositoryQuery{
         criteria.orderBy(builder.asc(root.get("description")));
 
         TypedQuery<Gender> query = manager.createQuery(criteria);
+        addRestrictionsOfPagination(query, pageable);
 
-        return null;
+        return new PageImpl<>(query.getResultList(), pageable, total(genderFilter));
+    }
+
+    private Long total(GenderFilter genderFilter) {
+        CriteriaBuilder builder = manager.getCriteriaBuilder();
+        CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
+        Root<Gender> root = criteria.from(Gender.class);
+
+        Predicate[] predicates = createRestrictions(genderFilter, builder, root);
+        criteria.where(predicates);
+        criteria.orderBy(builder.asc(root.get("description")));
+
+        criteria.select(builder.count(root));
+
+        return manager.createQuery(criteria).getSingleResult();
+    }
+
+    private void addRestrictionsOfPagination(TypedQuery<Gender> query, Pageable pageable) {
+        int currentPage = pageable.getPageNumber();
+        int totalRecordPerPage = pageable.getPageSize();
+        int primaryRegisterOfPage = currentPage * totalRecordPerPage;
+
+        query.setFirstResult(primaryRegisterOfPage);
+        query.setMaxResults(totalRecordPerPage);
     }
 
     private Predicate[] createRestrictions(GenderFilter genderFilter, CriteriaBuilder builder, Root<Gender> root) {

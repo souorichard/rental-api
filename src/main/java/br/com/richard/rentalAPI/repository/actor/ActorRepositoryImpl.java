@@ -1,9 +1,11 @@
 package br.com.richard.rentalAPI.repository.actor;
 
 import br.com.richard.rentalAPI.model.Actor;
+import br.com.richard.rentalAPI.model.Gender;
 import br.com.richard.rentalAPI.repository.filter.ActorFilter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityManager;
@@ -32,8 +34,32 @@ public class ActorRepositoryImpl implements ActorRepositoryQuery {
         criteria.orderBy(builder.asc(root.get("nameactor")));
 
         TypedQuery<Actor> query = manager.createQuery(criteria);
+        addRestrictionsOfPagination(query, pageable);
 
-        return null;
+        return new PageImpl<>(query.getResultList(), pageable, total(actorFilter));
+    }
+
+    private Long total(ActorFilter actorFilter) {
+        CriteriaBuilder builder = manager.getCriteriaBuilder();
+        CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
+        Root<Actor> root = criteria.from(Actor.class);
+
+        Predicate[] predicates = createRestrictions(actorFilter, builder, root);
+        criteria.where(predicates);
+        criteria.orderBy(builder.asc(root.get("nameactor")));
+
+        criteria.select(builder.count(root));
+
+        return manager.createQuery(criteria).getSingleResult();
+    }
+
+    private void addRestrictionsOfPagination(TypedQuery<Actor> query, Pageable pageable) {
+        int currentPage = pageable.getPageNumber();
+        int totalRecordPerPage = pageable.getPageSize();
+        int primaryRegisterOfPage = currentPage * totalRecordPerPage;
+
+        query.setFirstResult(primaryRegisterOfPage);
+        query.setMaxResults(totalRecordPerPage);
     }
 
     private Predicate[] createRestrictions(ActorFilter actorFilter, CriteriaBuilder builder, Root<Actor> root) {

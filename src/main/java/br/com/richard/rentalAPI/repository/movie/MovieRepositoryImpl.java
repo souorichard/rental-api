@@ -4,6 +4,7 @@ import br.com.richard.rentalAPI.model.Movie;
 import br.com.richard.rentalAPI.repository.filter.MovieFilter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityManager;
@@ -32,8 +33,32 @@ public class MovieRepositoryImpl implements MovieRepositoryQuery {
         criteria.orderBy(builder.asc(root.get("namemovie")));
 
         TypedQuery<Movie> query = manager.createQuery(criteria);
+        addRestrictionsOfPagination(query, pageable);
 
-        return null;
+        return new PageImpl<>(query.getResultList(), pageable, total(movieFilter));
+    }
+
+    private Long total(MovieFilter movieFilter) {
+        CriteriaBuilder builder = manager.getCriteriaBuilder();
+        CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
+        Root<Movie> root = criteria.from(Movie.class);
+
+        Predicate[] predicates = createRestrictions(movieFilter, builder, root);
+        criteria.where(predicates);
+        criteria.orderBy(builder.asc(root.get("namemovie")));
+
+        criteria.select(builder.count(root));
+
+        return manager.createQuery(criteria).getSingleResult();
+    }
+
+    private void addRestrictionsOfPagination(TypedQuery<Movie> query, Pageable pageable) {
+        int currentPage = pageable.getPageNumber();
+        int totalRecordPerPage = pageable.getPageSize();
+        int primaryRegisterOfPage = currentPage * totalRecordPerPage;
+
+        query.setFirstResult(primaryRegisterOfPage);
+        query.setMaxResults(totalRecordPerPage);
     }
 
     private Predicate[] createRestrictions(MovieFilter movieFilter, CriteriaBuilder builder, Root<Movie> root) {
