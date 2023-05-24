@@ -67,10 +67,9 @@ public class GenderRepositoryImpl implements GenderRepositoryQuery{
 
         if (!StringUtils.isEmpty(genderFilter.getDescription())) {
             predicates.add(builder.like(builder.lower(root.get("description")), "%" + genderFilter.getDescription().toLowerCase() + "%"));
-            return predicates.toArray(new Predicate[predicates.size()]);
         }
 
-        return null;
+        return predicates.toArray(new Predicate[predicates.size()]);
     }
 
 }

@@ -66,10 +66,9 @@ public class MovieRepositoryImpl implements MovieRepositoryQuery {
 
         if (!StringUtils.isEmpty(movieFilter.getNamemovie())) {
             predicates.add(builder.like(builder.lower(root.get("namemovie")), "%" + movieFilter.getNamemovie().toLowerCase() + "%"));
-            return predicates.toArray(new Predicate[predicates.size()]);
         }
 
-        return null;
+        return predicates.toArray(new Predicate[predicates.size()]);
     }
 
 }

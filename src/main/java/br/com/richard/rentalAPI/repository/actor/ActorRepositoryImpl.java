@@ -67,10 +67,9 @@ public class ActorRepositoryImpl implements ActorRepositoryQuery {
 
         if (!StringUtils.isEmpty(actorFilter.getNameactor())) {
             predicates.add(builder.like(builder.lower(root.get("nameactor")), "%" + actorFilter.getNameactor().toLowerCase() + "%"));
-            return predicates.toArray(new Predicate[predicates.size()]);
         }
 
-        return null;
+        return predicates.toArray(new Predicate[predicates.size()]);
     }
 
 }
