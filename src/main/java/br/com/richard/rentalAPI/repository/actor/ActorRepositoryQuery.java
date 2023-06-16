@@ -7,6 +7,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface ActorRepositoryQuery {
 
-    public Page<Actor> filter(ActorFilter actorFilter, Pageable pageable);
+  public Page<Actor> filter(ActorFilter actorFilter, Pageable pageable);
 
 }

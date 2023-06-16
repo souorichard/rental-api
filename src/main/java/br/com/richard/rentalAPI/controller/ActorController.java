@@ -18,17 +18,17 @@ import java.util.List;
 @RequestMapping("/actors")
 public class ActorController {
 
-    @Autowired
-    private ActorRepository actorRepository;
+  @Autowired
+  private ActorRepository actorRepository;
 
-    @GetMapping("/all")
-    public List<Actor> list() {
-        return actorRepository.findAll();
-    }
+  @GetMapping("/all")
+  public List<Actor> list() {
+    return actorRepository.findAll();
+  }
 
-    @GetMapping()
-    public Page<Actor> search(ActorFilter actorFilter, Pageable pageable) {
-        return actorRepository.filter(actorFilter, pageable);
-    }
+  @GetMapping()
+  public Page<Actor> search(ActorFilter actorFilter, Pageable pageable) {
+    return actorRepository.filter(actorFilter, pageable);
+  }
 
 }

@@ -5,6 +5,7 @@ import br.com.richard.rentalAPI.model.Movie;
 import br.com.richard.rentalAPI.repository.MovieRepository;
 import br.com.richard.rentalAPI.repository.filter.GenderFilter;
 import br.com.richard.rentalAPI.repository.filter.MovieFilter;
+import br.com.richard.rentalAPI.repository.projections.MovieDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,17 +19,17 @@ import java.util.List;
 @RequestMapping("/movies")
 public class MovieController {
 
-    @Autowired
-    private MovieRepository movieRepository;
+  @Autowired
+  private MovieRepository movieRepository;
 
-    @GetMapping("/all")
-    public List<Movie> list() {
-        return movieRepository.findAll();
-    }
+  @GetMapping("/all")
+  public List<Movie> list() {
+    return movieRepository.findAll();
+  }
 
-    @GetMapping()
-    public Page<Movie> search(MovieFilter movieFilter, Pageable pageable) {
-        return movieRepository.filter(movieFilter, pageable);
-    }
+  @GetMapping()
+  public Page<MovieDto> search(MovieFilter movieFilter, Pageable pageable) {
+    return movieRepository.filter(movieFilter, pageable);
+  }
 
 }

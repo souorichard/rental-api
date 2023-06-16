@@ -7,6 +7,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface GenderRepositoryQuery {
 
-    public Page<Gender> filter(GenderFilter genderFilter, Pageable pageable);
+  public Page<Gender> filter(GenderFilter genderFilter, Pageable pageable);
 
 }

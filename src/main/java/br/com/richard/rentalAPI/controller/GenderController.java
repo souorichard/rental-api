@@ -16,17 +16,17 @@ import java.util.List;
 @RequestMapping("/genders")
 public class GenderController {
 
-    @Autowired
-    private GenderRepository genderRepository;
+  @Autowired
+  private GenderRepository genderRepository;
 
-    @GetMapping("/all")
-    public List<Gender> list() {
-        return genderRepository.findAll();
-    }
+  @GetMapping("/all")
+  public List<Gender> list() {
+    return genderRepository.findAll();
+  }
 
-    @GetMapping()
-    public Page<Gender> search(GenderFilter genderFilter, Pageable pageable) {
-        return genderRepository.filter(genderFilter, pageable);
-    }
+  @GetMapping()
+  public Page<Gender> search(GenderFilter genderFilter, Pageable pageable) {
+    return genderRepository.filter(genderFilter, pageable);
+  }
 
 }

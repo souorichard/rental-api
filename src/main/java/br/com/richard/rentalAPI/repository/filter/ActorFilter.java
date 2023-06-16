@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class ActorFilter {
 
-    private String nameactor;
+  private String nameactor;
 
 }

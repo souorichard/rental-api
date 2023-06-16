@@ -12,19 +12,19 @@ import java.util.List;
 @Table(name = "movie")
 public class Movie {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column
-    private String namemovie;
+  @Column
+  private String namemovie;
 
-    @ManyToOne
-    @JoinColumn(name = "idactor")
-    private Actor actor;
+  @ManyToOne
+  @JoinColumn(name = "idactor")
+  private Actor actor;
 
-    @ManyToOne
-    @JoinColumn(name = "idgender")
-    private Gender gender;
+  @ManyToOne
+  @JoinColumn(name = "idgender")
+  private Gender gender;
 
 }

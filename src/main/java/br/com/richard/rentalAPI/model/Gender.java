@@ -12,15 +12,15 @@ import java.util.List;
 @Table(name = "gender")
 public class Gender {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer id;
 
-    @Column
-    private String description;
+  @Column
+  private String description;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "gender")
-    private List<Movie> moviegender = new ArrayList<>();
+  @JsonIgnore
+  @OneToMany(mappedBy = "gender")
+  private List<Movie> moviegender = new ArrayList<>();
 
 }

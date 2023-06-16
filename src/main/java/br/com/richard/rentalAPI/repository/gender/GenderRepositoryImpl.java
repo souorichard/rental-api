@@ -18,58 +18,58 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class GenderRepositoryImpl implements GenderRepositoryQuery{
+public class GenderRepositoryImpl implements GenderRepositoryQuery {
 
-    @PersistenceContext
-    private EntityManager manager;
+  @PersistenceContext
+  private EntityManager manager;
 
-    @Override
-    public Page<Gender> filter(GenderFilter genderFilter, Pageable pageable) {
-        CriteriaBuilder builder = manager.getCriteriaBuilder();
-        CriteriaQuery<Gender> criteria = builder.createQuery(Gender.class);
-        Root<Gender> root = criteria.from(Gender.class);
+  @Override
+  public Page<Gender> filter(GenderFilter genderFilter, Pageable pageable) {
+    CriteriaBuilder builder = manager.getCriteriaBuilder();
+    CriteriaQuery<Gender> criteria = builder.createQuery(Gender.class);
+    Root<Gender> root = criteria.from(Gender.class);
 
-        Predicate[] predicates = createRestrictions(genderFilter, builder, root);
-        criteria.where(predicates);
-        criteria.orderBy(builder.asc(root.get("description")));
+    Predicate[] predicates = createRestrictions(genderFilter, builder, root);
+    criteria.where(predicates);
+    criteria.orderBy(builder.asc(root.get("description")));
 
-        TypedQuery<Gender> query = manager.createQuery(criteria);
-        addRestrictionsOfPagination(query, pageable);
+    TypedQuery<Gender> query = manager.createQuery(criteria);
+    addRestrictionsOfPagination(query, pageable);
 
-        return new PageImpl<>(query.getResultList(), pageable, total(genderFilter));
+    return new PageImpl<>(query.getResultList(), pageable, total(genderFilter));
+  }
+
+  private Long total(GenderFilter genderFilter) {
+    CriteriaBuilder builder = manager.getCriteriaBuilder();
+    CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
+    Root<Gender> root = criteria.from(Gender.class);
+
+    Predicate[] predicates = createRestrictions(genderFilter, builder, root);
+    criteria.where(predicates);
+    criteria.orderBy(builder.asc(root.get("description")));
+
+    criteria.select(builder.count(root));
+
+    return manager.createQuery(criteria).getSingleResult();
+  }
+
+  private void addRestrictionsOfPagination(TypedQuery<?> query, Pageable pageable) {
+    int currentPage = pageable.getPageNumber();
+    int totalRecordPerPage = pageable.getPageSize();
+    int primaryRegisterOfPage = currentPage * totalRecordPerPage;
+
+    query.setFirstResult(primaryRegisterOfPage);
+    query.setMaxResults(totalRecordPerPage);
+  }
+
+  private Predicate[] createRestrictions(GenderFilter genderFilter, CriteriaBuilder builder, Root<Gender> root) {
+    List<Predicate> predicates = new ArrayList<>();
+
+    if (!StringUtils.isEmpty(genderFilter.getDescription())) {
+      predicates.add(builder.like(builder.lower(root.get("description")), "%" + genderFilter.getDescription().toLowerCase() + "%"));
     }
 
-    private Long total(GenderFilter genderFilter) {
-        CriteriaBuilder builder = manager.getCriteriaBuilder();
-        CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
-        Root<Gender> root = criteria.from(Gender.class);
-
-        Predicate[] predicates = createRestrictions(genderFilter, builder, root);
-        criteria.where(predicates);
-        criteria.orderBy(builder.asc(root.get("description")));
-
-        criteria.select(builder.count(root));
-
-        return manager.createQuery(criteria).getSingleResult();
-    }
-
-    private void addRestrictionsOfPagination(TypedQuery<Gender> query, Pageable pageable) {
-        int currentPage = pageable.getPageNumber();
-        int totalRecordPerPage = pageable.getPageSize();
-        int primaryRegisterOfPage = currentPage * totalRecordPerPage;
-
-        query.setFirstResult(primaryRegisterOfPage);
-        query.setMaxResults(totalRecordPerPage);
-    }
-
-    private Predicate[] createRestrictions(GenderFilter genderFilter, CriteriaBuilder builder, Root<Gender> root) {
-        List<Predicate> predicates = new ArrayList<>();
-
-        if (!StringUtils.isEmpty(genderFilter.getDescription())) {
-            predicates.add(builder.like(builder.lower(root.get("description")), "%" + genderFilter.getDescription().toLowerCase() + "%"));
-        }
-
-        return predicates.toArray(new Predicate[predicates.size()]);
-    }
+    return predicates.toArray(new Predicate[predicates.size()]);
+  }
 
 }

@@ -8,6 +8,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface MovieRepositoryQuery {
 
-    public Page<MovieDto> filter(MovieFilter movieFilter, Pageable pageable);
+  public Page<MovieDto> filter(MovieFilter movieFilter, Pageable pageable);
 
 }
